@@ -159,6 +159,7 @@ class FishingDerbyRLApp(App, SettingLoader, Communicator, PrintScore1Player):
 
     def init_states(self):
         subdivisions = self.space_subdivisions
+        total_states = self.space_subdivisions ** 2
         state2ind = {}
         ind2state = {}
         state = 0
