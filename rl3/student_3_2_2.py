@@ -12,10 +12,12 @@ alpha = 0.9
 gamma = 0.9
 
 # Epsilon initial
-epsilon_initial = 1
+#epsilon_initial = 1
+epsilon_initial: 0.9
 
 # Epsilon final
-epsilon_final = 1
+#epsilon_final = 1
+epsilon_final: 0.1
 
 # Annealing timesteps
 annealing_timesteps = 1
