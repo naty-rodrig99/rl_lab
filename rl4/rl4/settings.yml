@@ -1,5 +1,7 @@
 # rewards: [golden_fish, jellyfish_1, jellyfish_2, ... , step]
-rewards: [20, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -1]
+# rewards: [20, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -1]
+# rewards: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]
+rewards: [100, -50, -50, -50, -50, -50, -50, -50, -50, -50, -50, -50, -1]
 
 ## Initial position of the diver. Default: [1, 8]
 init_pos_diver: [1, 8]
@@ -24,10 +26,10 @@ headless: true
 epsilon_initial: 1
 
 ## Epsilon final
-epsilon_final: 1
+epsilon_final: 0.2
 
 ## Annealing timesteps
-annealing_timesteps: 1000
+annealing_timesteps: 10000
 
 ## threshold
 threshold: 1e-6
@@ -58,5 +60,5 @@ episode_max: 1000
 # Visualize exploration (slow, just for debugging)
 visualize_exploration: true
 #seed of the experience
-#seed: 1
+# seed: 0
 # seed: 2910399478

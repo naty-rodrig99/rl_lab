@@ -93,7 +93,7 @@ def epsilon_greedy(Q,
                    epsilon_initial=1,
                    epsilon_final=0.2,
                    anneal_timesteps=10000,
-                   eps_type="constant"):
+                   eps_type="linear"):
 
     if eps_type == 'constant':
         epsilon = epsilon_final
@@ -101,7 +101,11 @@ def epsilon_greedy(Q,
         # Implemenmt the epsilon-greedy algorithm for a constant epsilon value
         # Use epsilon and all input arguments of epsilon_greedy you see fit
         # It is recommended you use the np.random module
-        action = None
+        # action = None
+        if np.random.rand() < epsilon:
+            action = np.random.choice(all_actions)
+        else:
+            action = all_actions[np.argmax([Q[state][action] for action in all_actions])]
         # ADD YOUR CODE SNIPPET BETWEEN EX 4.1
 
     elif eps_type == 'linear':
@@ -109,8 +113,14 @@ def epsilon_greedy(Q,
         # Implemenmt the epsilon-greedy algorithm for a linear epsilon value
         # Use epsilon and all input arguments of epsilon_greedy you see fit
         # use the ScheduleLinear class
-        # It is recommended you use the np.random module
-        action = None
+        # It is recommended you use the np.random modules
+        # action = None
+        scheduler = ScheduleLinear(anneal_timesteps, epsilon_final, epsilon_initial)
+        epsilon = scheduler.value(current_total_steps)
+        if np.random.rand() < epsilon:
+            action = np.random.choice(all_actions) 
+        else:
+            action = all_actions[np.argmax([Q[state][action] for action in all_actions])]  
         # ADD YOUR CODE SNIPPET BETWEENEX  4.2
 
     else:
@@ -178,7 +188,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
         R_total = 0
         current_total_steps = 0
         steps = 0
-
+        
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.3
         # Change the while loop to incorporate a threshold limit, to stop training when the mean difference
         # in the Q table is lower than the threshold
@@ -197,7 +207,19 @@ class PlayerControllerRL(PlayerController, FishesModelling):
                 # ADD YOUR CODE SNIPPET BETWEEN EX 2.1 and 2.2
                 # Chose an action from all possible actions
                 #action = np.random.choice(list_pos)
-                action = np.nanargmax(Q[s_current])
+                # action = np.nanargmax(Q[s_current])
+                
+                action = epsilon_greedy(
+                    Q=Q,
+                    state=s_current,
+                    all_actions=self.allowed_moves[s_current],
+                    current_total_steps=current_total_steps,
+                    epsilon_initial=self.epsilon_initial,
+                    epsilon_final=self.epsilon_final,
+                    anneal_timesteps=self.annealing_timesteps,
+                    eps_type="linear"
+                    # eps_type="constant"
+                    )
                 # ADD YOUR CODE SNIPPET BETWEEN EX 2.1 and 2.2
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX 5
@@ -354,5 +376,7 @@ class ScheduleLinear(object):
     def value(self, t):
         # ADD YOUR CODE SNIPPET BETWEEN EX 4.2
         # Return the annealed linear value
-        return self.initial_p
+        delta_epsilon = self.final_p - self.initial_p
+        value = self.initial_p + delta_epsilon * (t / self.schedule_timesteps)
+        return value
         # ADD YOUR CODE SNIPPET BETWEEN EX 4.2
